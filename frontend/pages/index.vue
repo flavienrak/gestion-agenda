@@ -12,6 +12,7 @@ import PopupComponent from '~/components/PopupComponent.vue';
 import { useUserStore } from '~/stores/user.js';
 import { useAgendaStore } from '~/stores/agendas';
 import { getAgendasService } from '~/services/agendas.js';
+import { logoutService } from '~/services/auth';
 
 const isLoading = ref(true);
 const agendaStore = useAgendaStore();
@@ -72,6 +73,11 @@ const close = () => {
 
   router.push('/');
 };
+
+const logout = async () => {
+  await logoutService();
+  window.location = '/login';
+};
 </script>
 
 <template>
@@ -79,15 +85,37 @@ const close = () => {
     <div class="max-w-[50rem] w-full p-10 flex flex-col gap-10">
       <div class="flex justify-between w-full">
         <header-component />
-        <tooltip-component
-          v-if="userStore.user.id"
-          :title="userStore.user.email"
-        >
-          <label
-            class="relative flex justify-center items-center p-2 h-10 w-10 rounded-full bg-cyan-500 text-white font-bold text-xl cursor-pointer"
-            >{{ userStore.user.name.charAt(0) }}</label
+        <div class="flex items-center gap-5">
+          <i
+            @click="logout"
+            class="relative cursor-pointer text-red-500 flex justify-center items-center h-10 w-10 rounded-full border p-2"
           >
-        </tooltip-component>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-log-out"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" x2="9" y1="12" y2="12" />
+            </svg>
+          </i>
+          <tooltip-component
+            v-if="userStore.user.id"
+            :title="userStore.user.email"
+          >
+            <label
+              class="relative flex justify-center items-center p-2 h-10 w-10 rounded-full bg-cyan-500 text-white font-bold text-xl cursor-pointer"
+              >{{ userStore.user.name.charAt(0) }}</label
+            >
+          </tooltip-component>
+        </div>
       </div>
       <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
